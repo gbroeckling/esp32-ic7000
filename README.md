@@ -13,6 +13,24 @@ The Icom IC-7000 is an HF/VHF/UHF all-mode transceiver with a detachable control
 
 > **See [docs/HARDWARE_REFERENCE.md](docs/HARDWARE_REFERENCE.md) for detailed connector pinouts, pogo pin identification, and all rear panel diagrams.**
 
+### Rear Panel — All Connectors Labeled
+
+![IC-7000 Rear Panel Labeled](docs/images/ic7000_rear_panel_labeled.png)
+
+*Official Icom diagram showing every connector. The CI-V REMOTE jack (#6) is where the ESP32 connects. Source: IC-7000 Instruction Manual p.20*
+
+### Front Panel Separation — Where the Head Connects
+
+![IC-7000 Front Panel Separation](docs/images/ic7000_front_panel_separation.png)
+
+*Shows the latch mechanism, OPC-1443 cable connector, and the 10-pin pogo interface we need for the PWRK power-on pin. Source: IC-7000 Instruction Manual p.25*
+
+### CI-V Command Table (from manual)
+
+![IC-7000 CI-V Commands](docs/images/ic7000_civ_command_table.png)
+
+*Complete CI-V command reference showing all sub-commands. Source: IC-7000 Instruction Manual p.153*
+
 
 ---
 
