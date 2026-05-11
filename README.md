@@ -64,6 +64,9 @@ Once powered on, CI-V provides full control. The head is not needed for any radi
 
 ### CI-V Interface
 
+![CI-V Interface Schematic](docs/images/civ_interface.svg)
+
+
 The CI-V bus is a half-duplex, open-drain serial bus at TTL levels. RX and TX share a single wire (the 3.5mm tip). We use a diode to isolate the TX pin so the ESP32 can both read and write.
 
 ```
@@ -91,6 +94,9 @@ CI-V Jack (3.5mm mono)                      Dev Board
 
 ### Power-On Circuit (PWRK)
 
+![PWRK Circuit Schematic](docs/images/pwrk_circuit.svg)
+
+
 The PWRK pin on the IC-7000's 10-pin head connector has a 3.3V pullup on the radio's logic board. Grounding it momentarily (200ms) triggers power-on.
 
 **Option A: Manual button only**
@@ -117,6 +123,9 @@ IC-7000 10-PIN CONNECTOR              ESP32-S3
 When GPIO6 goes HIGH, the MOSFET conducts, grounding PWRK. The ESP32 pulses GPIO6 HIGH for 200ms then LOW.
 
 ### Complete System
+
+![Complete System Schematic](docs/images/complete_circuit.svg)
+
 
 ```
                     ┌──────────────────────────┐
@@ -280,6 +289,40 @@ Bytes:   00 00 20 65 41  (paired, LSB first)
 
 Sent as: FE FE 70 E0 05 00 00 20 65 41 FD
 ```
+
+---
+
+## Web Interface
+
+The ESP32 hosts a built-in web server. No app install needed, just open a browser.
+
+### ESPHome Web Server (direct access via phone/computer)
+
+![ESPHome Web Server v3](https://esphome.io/_astro/web_server-v3.BBEvTqQ9_Z28RuB9.webp)
+
+*The ESPHome web interface shows all sensors, switches, and buttons. Click any sensor to see a history graph.*
+
+### Sensor History Graphs
+
+![Sensor History](https://esphome.io/_astro/sensor-history-graph.DDEyRJLF_Z1NohXt.webp)
+
+*Click on any sensor (frequency, S-meter) to see real-time graphing.*
+
+### What You See on Your Phone
+
+Open the ESP32 IP in your browser to get:
+
+| Section | What it shows |
+|---------|--------------|
+| **Sensors** | Current frequency (Hz), S-meter level, PTT state, mode (USB/FM/CW) |
+| **Switches** | PTT on/off toggle, Radio Power toggle |
+| **Buttons** | Frequency presets (2m calling, 70cm, 20m SSB, 40m SSB, FRS, Marine Ch16) |
+| **Buttons** | Mode selectors (USB, LSB, FM, AM, CW) |
+| **Status** | WiFi signal strength, uptime, IP address |
+
+### Home Assistant Dashboard
+
+When connected to Home Assistant, all entities auto-discover. Build custom dashboards with frequency gauges, S-meter graphs, PTT buttons, band presets, and power controls. Full radio control from the HA mobile app.
 
 ---
 
