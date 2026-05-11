@@ -64,7 +64,7 @@ Once powered on, CI-V provides full control. The head is not needed for any radi
 
 ### CI-V Interface
 
-![CI-V Interface Schematic](docs/images/civ_interface.svg)
+![CI-V Interface Schematic](docs/images/civ_interface.png)
 
 
 The CI-V bus is a half-duplex, open-drain serial bus at TTL levels. RX and TX share a single wire (the 3.5mm tip). We use a diode to isolate the TX pin so the ESP32 can both read and write.
@@ -94,7 +94,7 @@ CI-V Jack (3.5mm mono)                      Dev Board
 
 ### Power-On Circuit (PWRK)
 
-![PWRK Circuit Schematic](docs/images/pwrk_circuit.svg)
+![PWRK Circuit Schematic](docs/images/pwrk_circuit.png)
 
 
 The PWRK pin on the IC-7000's 10-pin head connector has a 3.3V pullup on the radio's logic board. Grounding it momentarily (200ms) triggers power-on.
@@ -124,7 +124,7 @@ When GPIO6 goes HIGH, the MOSFET conducts, grounding PWRK. The ESP32 pulses GPIO
 
 ### Complete System
 
-![Complete System Schematic](docs/images/complete_circuit.svg)
+![Complete System Schematic](docs/images/complete_circuit.png)
 
 
 ```
