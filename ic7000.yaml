@@ -1,0 +1,205 @@
+esphome:
+  name: ic7000
+  friendly_name: "IC-7000 Transceiver"
+
+esp32:
+  board: esp32-s3-devkitc-1
+  framework:
+    type: arduino
+
+# WiFi — update with your network
+wifi:
+  ssid: !secret wifi_ssid
+  password: !secret wifi_password
+  manual_ip:
+    static_ip: 192.168.1.60
+    gateway: 192.168.1.254
+    subnet: 255.255.255.0
+
+  ap:
+    ssid: "IC7000-Fallback"
+    password: "ic7000setup"
+
+captive_portal:
+
+# Enable Home Assistant API
+api:
+  encryption:
+    key: !secret api_key
+
+ota:
+  platform: esphome
+
+# Web server for direct phone control (no HA needed)
+web_server:
+  port: 80
+
+# Logging
+logger:
+  level: DEBUG
+
+# UART for CI-V bus
+# CI-V is half-duplex on a single wire, but we use separate RX/TX pins
+# with external diode + resistor circuit to combine them
+uart:
+  id: civ_uart
+  tx_pin: GPIO5
+  rx_pin: GPIO4
+  baud_rate: 19200
+  data_bits: 8
+  stop_bits: 1
+  parity: NONE
+
+# Power-on pin (PWRK) — active low, momentary pulse to ground
+output:
+  - platform: gpio
+    pin:
+      number: GPIO6
+      mode: OUTPUT_OPEN_DRAIN
+      inverted: false
+    id: pwrk_output
+
+# Button to trigger power-on pulse
+button:
+  - platform: output
+    name: "Radio Power Toggle"
+    output: pwrk_output
+    duration: 200ms
+    icon: "mdi:power"
+
+# CI-V component
+external_components:
+  - source:
+      type: local
+      path: components
+
+icom_civ:
+  id: ic7000
+  uart_id: civ_uart
+  civ_address: 0x70
+  update_interval: 2s
+
+# Sensors from radio
+sensor:
+  - platform: icom_civ
+    icom_civ_id: ic7000
+    frequency:
+      name: "Frequency"
+      icon: "mdi:sine-wave"
+      unit_of_measurement: "Hz"
+    s_meter:
+      name: "S-Meter"
+      icon: "mdi:signal"
+    ptt_state:
+      name: "PTT State"
+      icon: "mdi:microphone"
+
+  # ESP32 diagnostics
+  - platform: wifi_signal
+    name: "WiFi Signal"
+    update_interval: 60s
+
+  - platform: uptime
+    name: "Uptime"
+
+text_sensor:
+  - platform: icom_civ
+    icom_civ_id: ic7000
+    mode:
+      name: "Mode"
+      icon: "mdi:radio"
+
+  - platform: wifi_info
+    ip_address:
+      name: "IP Address"
+
+switch:
+  - platform: icom_civ
+    icom_civ_id: ic7000
+    ptt:
+      name: "PTT"
+      icon: "mdi:microphone"
+    power:
+      name: "Radio Power"
+      icon: "mdi:power"
+
+# Frequency presets as buttons
+button:
+  - platform: template
+    name: "2m Calling (146.520)"
+    icon: "mdi:radio-tower"
+    on_press:
+      - lambda: |-
+          id(ic7000).set_frequency(146520000);
+          id(ic7000).set_mode(5);  // FM
+
+  - platform: template
+    name: "70cm Calling (446.000)"
+    icon: "mdi:radio-tower"
+    on_press:
+      - lambda: |-
+          id(ic7000).set_frequency(446000000);
+          id(ic7000).set_mode(5);  // FM
+
+  - platform: template
+    name: "20m SSB (14.250)"
+    icon: "mdi:radio-tower"
+    on_press:
+      - lambda: |-
+          id(ic7000).set_frequency(14250000);
+          id(ic7000).set_mode(1);  // USB
+
+  - platform: template
+    name: "40m SSB (7.200)"
+    icon: "mdi:radio-tower"
+    on_press:
+      - lambda: |-
+          id(ic7000).set_frequency(7200000);
+          id(ic7000).set_mode(0);  // LSB
+
+  - platform: template
+    name: "FRS Ch1 (462.5625)"
+    icon: "mdi:walkie-talkie"
+    on_press:
+      - lambda: |-
+          id(ic7000).set_frequency(462562500);
+          id(ic7000).set_mode(5);  // FM
+
+  - platform: template
+    name: "Marine Ch16 (156.800)"
+    icon: "mdi:ferry"
+    on_press:
+      - lambda: |-
+          id(ic7000).set_frequency(156800000);
+          id(ic7000).set_mode(5);  // FM
+
+# Mode select buttons
+  - platform: template
+    name: "Mode: USB"
+    icon: "mdi:waveform"
+    on_press:
+      - lambda: id(ic7000).set_mode(1);
+
+  - platform: template
+    name: "Mode: LSB"
+    icon: "mdi:waveform"
+    on_press:
+      - lambda: id(ic7000).set_mode(0);
+
+  - platform: template
+    name: "Mode: FM"
+    icon: "mdi:waveform"
+    on_press:
+      - lambda: id(ic7000).set_mode(5);
+
+  - platform: template
+    name: "Mode: AM"
+    icon: "mdi:waveform"
+    on_press:
+      - lambda: id(ic7000).set_mode(2);
+
+  - platform: template
+    name: "Mode: CW"
+    icon: "mdi:waveform"
+    on_press:
+      - lambda: id(ic7000).set_mode(3);
