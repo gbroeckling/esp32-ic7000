@@ -4,6 +4,16 @@
 
 The Icom IC-7000 is an HF/VHF/UHF all-mode transceiver with a detachable control head. If the head is lost, stolen, or broken, the radio becomes a paperweight — until now. This project uses an ESP32-S3 connected to the radio's CI-V port to provide full remote control via a web browser or Home Assistant, with no original head unit required.
 
+## The Radio
+
+| | |
+|---|---|
+| ![IC-7000 Front](https://www.rigpix.com/icom/ic7000_lrg.jpg) | ![IC-7000 Rear](https://www.rigpix.com/icom/ic7000_back_lrg.jpg) |
+| Front panel (head attached) | Rear panel — CI-V jack is labeled REMOTE |
+
+> **See [docs/HARDWARE_REFERENCE.md](docs/HARDWARE_REFERENCE.md) for detailed connector pinouts, pogo pin identification, and all rear panel diagrams.**
+
+
 ---
 
 ## How It Works
